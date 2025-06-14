@@ -38,7 +38,6 @@ public class Fabrica {
         puestasEnFunc = solucion.size();
         for (Maquina m : solucion) {
             cantPiezas += m.getPiezasQueProduce();
-            ;
         }
     }
 
