@@ -14,8 +14,13 @@ public class Main {
 
         // Crear la fábrica y ejecutar el algoritmo greedy
         Fabrica fabrica = new Fabrica();
-        ArrayList<Maquina> resultado = fabrica.greedy(maquinas, piezasRequeridas);
+        ArrayList<Maquina> resultado = fabrica.backtracking(maquinas, piezasRequeridas);
 
+        // Mostrar resultados
+        System.out.println("Máquinas usadas:");
+        for (Maquina m : resultado) {
+            System.out.println("- " + m.getNombre() + " (" + m.getPiezasQueProduce() + " piezas)");
+        }
         // Mostrar resultados
         System.out.println("Máquinas usadas:");
         for (Maquina m : resultado) {
