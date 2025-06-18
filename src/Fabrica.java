@@ -32,6 +32,10 @@ public class Fabrica {
 
     /*
        -------- Breve explicacion-------
+       Nuestros candidatos van a ser las maquinas que me pasan por parámetro. Y la estrategia greedy para
+       nuestra seleccion de candidatos es ordenarlas de mayor a menor produccion de piezas, entonces al inicial elijo
+       tengo la de mayor cantidad, mientras la cantidas de piezas que produce mi maquina seleccionada entre en las piezas que
+       faltan producir,continuo agtegando la misma, cuando se pase, prosigo con la siguiente maquina.
        */
     public ArrayList<Maquina> greedy(ArrayList<Maquina> maquinasDadas) {
         privgGeedy(maquinasDadas, piezasAProducir);
