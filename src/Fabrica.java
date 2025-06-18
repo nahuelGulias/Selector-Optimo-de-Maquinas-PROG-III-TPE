@@ -46,9 +46,7 @@ public class Fabrica {
     */
     public ArrayList<Maquina> backtracking(ArrayList<Maquina> maquinas, int piezas) {
         solucion = new ArrayList<>();
-
-        int piezasProducidas = 0;
-        backtrackingRec(solucion, maquinas, piezasProducidas);
+        backtrackingRec(solucion, maquinas,0);
         return solucion;
     }
 
@@ -60,9 +58,10 @@ public class Fabrica {
         }
 
         if (piezasProducidas == piezasAProducir) {
-            if (actual.size() < solucion.size())
+            if (actual.size() < solucion.size()){
                 this.solucion.clear();
-            this.solucion.addAll(actual);
+                this.solucion.addAll(actual);
+            }
         } else {
             for (Maquina m : maquinas) { //Agarra primer maquina
                 actual.add(m); // agrega maquina
