@@ -3,11 +3,14 @@ import java.util.Collections;
 import java.util.Iterator;
 
 public class Fabrica {
-    private ArrayList<Maquina> solucion;
+    private ArrayList<Maquina> solucionGreedy;
+    private ArrayList<Maquina> solucionBacktracking;
+    private ArrayList<Maquina> maquinas;
     private int cantPiezas;
     private int puestasEnFunc;
     private int piezasAProducir; //Cantidad de piezas a producir, leidas del txt
     private int cantEstados;
+
 
     public int getPuestasEnFunc() {
         return puestasEnFunc;
@@ -17,12 +20,14 @@ public class Fabrica {
         return cantEstados;
     }
 
-    public Fabrica(int piezasAProducir) {
-        this.solucion = new ArrayList<>();
+    public Fabrica(int piezasAProducir, ArrayList<Maquina> maquinas) {
+        this.solucionGreedy = new ArrayList<>();
+        this.solucionBacktracking = new ArrayList<>();
         this.cantPiezas = 0;
         this.puestasEnFunc = 0;
         this.piezasAProducir = piezasAProducir;
         this.cantEstados = 0;
+        this.maquinas = new ArrayList<>(maquinas);
     }
 
     /*
@@ -30,7 +35,7 @@ public class Fabrica {
        */
     public ArrayList<Maquina> greedy(ArrayList<Maquina> maquinasDadas) {
         privgGeedy(maquinasDadas, piezasAProducir);
-        return solucion;
+        return solucionGreedy;
     }
 
     private void privgGeedy(ArrayList<Maquina> maquinas, int piezasAProducir) {
@@ -38,13 +43,13 @@ public class Fabrica {
         for (Maquina m : maquinas) {
 
             while (piezasAProducir >= m.getPiezasQueProduce()) {
-                solucion.add(m);// Greedy: siempre toma la maquina con mayor pieza y la repite hasta que no sobrepase el monto
+                solucionGreedy.add(m);// Greedy: siempre toma la maquina con mayor pieza y la repite hasta que no sobrepase el monto
                 piezasAProducir -= m.getPiezasQueProduce();
             }
         }
 
-        puestasEnFunc = solucion.size();
-        for (Maquina m : solucion) {
+        puestasEnFunc = solucionGreedy.size();
+        for (Maquina m : solucionGreedy) {
             cantPiezas += m.getPiezasQueProduce();
         }
     }
@@ -60,7 +65,7 @@ public class Fabrica {
     public ArrayList<Maquina> backtracking(ArrayList<Maquina> maquinas) {
         ArrayList<Maquina> actual = new ArrayList<>();
         backtrackingRec(actual, maquinas,0);
-        return solucion;
+        return solucionBacktracking;
     }
 
     private void backtrackingRec(ArrayList<Maquina> actual, ArrayList<Maquina> maquinas, int piezasProducidas) {
@@ -69,15 +74,15 @@ public class Fabrica {
         if (piezasProducidas > piezasAProducir) {
             return;
         }
-        if (!solucion.isEmpty() && actual.size() >= solucion.size()) {
+        if (!solucionBacktracking.isEmpty() && actual.size() >= solucionBacktracking.size()) {
             return;
         }
 
 
         if (piezasProducidas == piezasAProducir) {
-            if (solucion.isEmpty() || actual.size() < solucion.size()){
-                this.solucion.clear();
-                this.solucion.addAll(actual);
+            if (solucionBacktracking.isEmpty() || actual.size() < solucionBacktracking.size()){
+                this.solucionBacktracking.clear();
+                this.solucionBacktracking.addAll(actual);
             }
         } else {
             for (Maquina m : maquinas) { //Agarra primer maquina
@@ -91,11 +96,17 @@ public class Fabrica {
 
         @Override
         public String toString () {
-            return "Fabrica{" +
-                    "solucion=" + solucion.toString() + "\n" +
-                    ", cantPiezas=" + cantPiezas +
-                    ", puestasEnFunc=" + puestasEnFunc +
-                    '}';
+            return "Fabrica{" + "\n" +
+                    "- Solucion Greedy= " + solucionGreedy.toString() + "\n" +
+                    "- Cantidad de piezas producidas = " + cantPiezas + "\n" +
+                    "- Cantidad de puestas en funcionamiento = " + solucionGreedy.size() + "\n" +
+                    "- Nodos explorados = " + maquinas.size() + "\n" +
+                     "\n" +
+                    "- Solucion Backtracking = " + solucionBacktracking.toString() + "\n" +
+                    "- Cantidad de piezas producidas = " + cantPiezas + "\n" +
+                    "- Cantidad de puestas en funcionamiento = " + solucionBacktracking.size() + "\n" +
+                    "- Estados generados  = " + cantEstados + "\n" +
+            '}';
         }
 }
 
