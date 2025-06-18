@@ -9,29 +9,37 @@ public class Fabrica {
     private int piezasAProducir; //Cantidad de piezas a producir, leidas del txt
     private int cantEstados;
 
-    public Fabrica() {
+    public int getPuestasEnFunc() {
+        return puestasEnFunc;
+    }
+
+    public int getCantEstados() {
+        return cantEstados;
+    }
+
+    public Fabrica(int piezasAProducir) {
         this.solucion = new ArrayList<>();
         this.cantPiezas = 0;
         this.puestasEnFunc = 0;
-        this.piezasAProducir = 12;
+        this.piezasAProducir = piezasAProducir;
         this.cantEstados = 0;
     }
 
     /*
        -------- Breve explicacion-------
        */
-    public ArrayList<Maquina> greedy(ArrayList<Maquina> maquinasDadas, int piezas) {
-        privgGeedy(maquinasDadas, piezas);
+    public ArrayList<Maquina> greedy(ArrayList<Maquina> maquinasDadas) {
+        privgGeedy(maquinasDadas, piezasAProducir);
         return solucion;
     }
 
-    private void privgGeedy(ArrayList<Maquina> maquinas, int piezas) {
+    private void privgGeedy(ArrayList<Maquina> maquinas, int piezasAProducir) {
         Collections.sort(maquinas, Collections.reverseOrder());
         for (Maquina m : maquinas) {
 
-            while (piezas >= m.getPiezasQueProduce()) {
+            while (piezasAProducir >= m.getPiezasQueProduce()) {
                 solucion.add(m);// Greedy: siempre toma la maquina con mayor pieza y la repite hasta que no sobrepase el monto
-                piezas -= m.getPiezasQueProduce();
+                piezasAProducir -= m.getPiezasQueProduce();
             }
         }
 
@@ -43,10 +51,15 @@ public class Fabrica {
 
     /*
     -------- Breve explicacion-------
+    Árbol de exploración: comenzaría tomando como opción la maquina m1 y cuando quiera volver a
+    considerarla se topa con nuestra primera poda, que es que no se pase de las maquinas a producir.
+     Una vez que termina de evaluar esa rama, sigue asimismo con m2. Nuestra segunda poda ya sería
+     considerando nuestra solución y que el camino actual no sobrepase el tamaño de la misma, así que en el caso de que no
+     haya alcanzado el numero de piezas a producir pero nuestro tamaño actual sea mayor que solucion, ya corta las consideraciones de esa rama.
     */
-    public ArrayList<Maquina> backtracking(ArrayList<Maquina> maquinas, int piezas) {
-        solucion = new ArrayList<>();
-        backtrackingRec(solucion, maquinas,0);
+    public ArrayList<Maquina> backtracking(ArrayList<Maquina> maquinas) {
+        ArrayList<Maquina> actual = new ArrayList<>();
+        backtrackingRec(actual, maquinas,0);
         return solucion;
     }
 
@@ -56,9 +69,13 @@ public class Fabrica {
         if (piezasProducidas > piezasAProducir) {
             return;
         }
+        if (!solucion.isEmpty() && actual.size() >= solucion.size()) {
+            return;
+        }
+
 
         if (piezasProducidas == piezasAProducir) {
-            if (actual.size() < solucion.size()){
+            if (solucion.isEmpty() || actual.size() < solucion.size()){
                 this.solucion.clear();
                 this.solucion.addAll(actual);
             }
