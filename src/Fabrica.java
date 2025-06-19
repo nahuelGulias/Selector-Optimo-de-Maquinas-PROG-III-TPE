@@ -36,6 +36,7 @@ public class Fabrica {
        nuestra seleccion de candidatos es ordenarlas de mayor a menor produccion de piezas, entonces al inicial elijo
        tengo la de mayor cantidad, mientras la cantidas de piezas que produce mi maquina seleccionada entre en las piezas que
        faltan producir,continuo agtegando la misma, cuando se pase, prosigo con la siguiente maquina.
+       En caso de haber encpntrado una solucion, envío un mensaje con la cantidad de piezas faltantes.
        */
     public ArrayList<Maquina> greedy(ArrayList<Maquina> maquinasDadas) {
         privgGeedy(maquinasDadas, piezasAProducir);
@@ -55,6 +56,11 @@ public class Fabrica {
         puestasEnFunc = solucionGreedy.size();
         for (Maquina m : solucionGreedy) {
             cantPiezas += m.getPiezasQueProduce();
+        }
+        if (piezasAProducir == 0) {
+            System.out.println("Greedy encontró una solución exacta.");
+        } else {
+            System.out.println("Greedy no pudo producir exactamente la cantidad requerida. Faltan " + piezasAProducir + " piezas.");
         }
     }
 
