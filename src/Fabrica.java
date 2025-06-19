@@ -8,17 +8,8 @@ public class Fabrica {
     private ArrayList<Maquina> maquinas;
     private int cantPiezas;
     private int puestasEnFunc;
-    private int piezasAProducir; //Cantidad de piezas a producir, leidas del txt
+    private int piezasAProducir; //Cantidad de piezas a producir, leídas del txt
     private int cantEstados;
-
-
-    public int getPuestasEnFunc() {
-        return puestasEnFunc;
-    }
-
-    public int getCantEstados() {
-        return cantEstados;
-    }
 
     public Fabrica(int piezasAProducir, ArrayList<Maquina> maquinas) {
         this.solucionGreedy = new ArrayList<>();
@@ -30,20 +21,22 @@ public class Fabrica {
         this.maquinas = new ArrayList<>(maquinas);
     }
 
-    /*
-       -------- Breve explicacion-------
-       Nuestros candidatos van a ser las maquinas que me pasan por parámetro. Y la estrategia greedy para
-       nuestra seleccion de candidatos es ordenarlas de mayor a menor produccion de piezas, entonces al inicial elijo
-       tengo la de mayor cantidad, mientras la cantidas de piezas que produce mi maquina seleccionada entre en las piezas que
-       faltan producir,continuo agtegando la misma, cuando se pase, prosigo con la siguiente maquina.
-       En caso de haber encpntrado una solucion, envío un mensaje con la cantidad de piezas faltantes.
-       */
+     /*
+       Nuestros candidatos serán las máquinas obtenidas por parámetro. La estrategia greedy utilizada para
+       nuestra selección de candidatos será, una vez ordenadas las máquinas de mayor a menor producción de piezas,
+       seleccionar la máquina que produzca la mayor cantidad de piezas posibles. Siempre y cuando, dicha cantidad
+       que produce mi máquina seleccionada, sea menor que la cantidad de piezas que restan producir, con la posibilidad de
+       poder reutilizar esa máquina. En caso de no poder reutilizar una máquina, dado que las piezas que produce excede la cantidad
+       especificada, se prosigue con la siguiente máquina.
+       En caso de no encontrarse solución, se imprimirá un mensaje por consola.
+   */
+
     public ArrayList<Maquina> greedy(ArrayList<Maquina> maquinasDadas) {
-        privgGeedy(maquinasDadas, piezasAProducir);
+        privateGreedy(maquinasDadas, piezasAProducir);
         return solucionGreedy;
     }
 
-    private void privgGeedy(ArrayList<Maquina> maquinas, int piezasAProducir) {
+    private void privateGreedy(ArrayList<Maquina> maquinas, int piezasAProducir) {
         Collections.sort(maquinas, Collections.reverseOrder());
         for (Maquina m : maquinas) {
 
@@ -64,14 +57,18 @@ public class Fabrica {
         }
     }
 
-    /*
-    -------- Breve explicacion-------
-    Árbol de exploración: comenzaría tomando como opción la maquina m1 y cuando quiera volver a
-    considerarla se topa con nuestra primera poda, que es que no se pase de las maquinas a producir.
-     Una vez que termina de evaluar esa rama, sigue asimismo con m2. Nuestra segunda poda ya sería
-     considerando nuestra solución y que el camino actual no sobrepase el tamaño de la misma, así que en el caso de que no
-     haya alcanzado el numero de piezas a producir pero nuestro tamaño actual sea mayor que solucion, ya corta las consideraciones de esa rama.
+   /*
+     - Árbol de exploración: Se genera tomando como opción la máquina m1. Esta misma, cuando se quiera volver a
+       considerar, se toparía con nuestra primera poda, la cual verifica que las piezas producidas hasta el momento
+       no excedan la cantidad indicada. Una vez termina de evaluar esa rama, sigue explorando cada rama de los nodos(máquinas).
+       Nuestra segunda poda sería considerando nuestra solución, evaluando que nuestra solución actual no sobrepase la mejor solución,
+       por lo que, en el caso de que no haber alcanzado la cantidad necesaria de piezas a producir, si nuestro tamaño actual supera la solución,
+       no se considerará esa rama.
+
+     - Se considerará solución, siempre que se obtenga la secuencia que sume la cantidad necesaria de piezas, en menor cantidad de puestas en funcionamiento.
+     - Los estados estarán dados por la cantidad de llamadas recursivas, en las que se evalúa la posibilidad de agregar una máquina determinada a la solución
     */
+
     public ArrayList<Maquina> backtracking(ArrayList<Maquina> maquinas) {
         ArrayList<Maquina> actual = new ArrayList<>();
         backtrackingRec(actual, maquinas,0);
@@ -80,23 +77,22 @@ public class Fabrica {
 
     private void backtrackingRec(ArrayList<Maquina> actual, ArrayList<Maquina> maquinas, int piezasProducidas) {
         cantEstados++;
-        //posible poda
+        // Primera poda
         if (piezasProducidas > piezasAProducir) {
             return;
         }
+        // Segunda poda
         if (!solucionBacktracking.isEmpty() && actual.size() >= solucionBacktracking.size()) {
             return;
         }
-
-
         if (piezasProducidas == piezasAProducir) {
             if (solucionBacktracking.isEmpty() || actual.size() < solucionBacktracking.size()){
                 this.solucionBacktracking.clear();
                 this.solucionBacktracking.addAll(actual);
             }
         } else {
-            for (Maquina m : maquinas) { //Agarra primer maquina
-                actual.add(m); // agrega maquina
+            for (Maquina m : maquinas) {
+                actual.add(m);
                 backtrackingRec(actual, maquinas, piezasProducidas + m.getPiezasQueProduce()); // llamo
                 actual.removeLast();
             }
