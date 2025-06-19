@@ -41,7 +41,7 @@ public class Fabrica {
         for (Maquina m : maquinas) {
 
             while (piezasAProducir >= m.getPiezasQueProduce()) {
-                solucionGreedy.add(m);// Greedy: siempre toma la maquina con mayor pieza y la repite hasta que no sobrepase el monto
+                solucionGreedy.add(m);
                 piezasAProducir -= m.getPiezasQueProduce();
             }
         }
